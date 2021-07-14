@@ -11,22 +11,22 @@ jobs:
     steps:
       - checkout
       - persist_to_workspace:
-        root: .
-        paths:
-          - .
+          root: .
+          paths:
+            - .
 
   npm_install:
     executor: node
     steps:
       - attach_workspace:
-        at: .
+          at: .
       - run:
-        name: Installing npm dependencies
-        command: npm install
+          name: Installing npm dependencies
+          command: npm install
       - persist_to_workspace:
-        root: .
-        paths:
-          - node_modules
+          root: .
+          paths:
+            - node_modules
 
   lint:
     executor: node
