@@ -54,3 +54,25 @@ jobs:
       - run:
           name: Test
           command: npm run test
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - checkout
+
+      - npm_install:
+          requires:
+            - checkout
+
+      - lint:
+          requires:
+            - npm_install
+
+      - typecheck:
+          requires:
+            - npm_install
+
+      - test:
+          requires:
+            - npm_install
