@@ -8,9 +8,11 @@ type CacheEntry = {
 const defaultCachePrefix = "_cache";
 const defaultCapacity = 1000;
 
+export type StorageCacheScope = "local" | "session";
+
 export type StorageCacheOptions = CacheOptions & {
   readonly prefix?: string;
-  readonly scope?: "local" | "session";
+  readonly scope?: StorageCacheScope;
 };
 
 export class StorageCache implements Cache {
@@ -18,6 +20,7 @@ export class StorageCache implements Cache {
   readonly #dataPrefix: string;
   readonly #metaPrefix: string;
   readonly #prefix: string;
+  readonly #scope: StorageCacheScope;
   readonly #storage: Storage;
 
   public constructor({
@@ -29,8 +32,9 @@ export class StorageCache implements Cache {
     this.#prefix = prefix || defaultCachePrefix;
     this.#dataPrefix = this.#prefix + "_data_";
     this.#metaPrefix = this.#prefix + "_meta_";
+    this.#scope = scope;
     this.#storage =
-      scope === "local" ? window.localStorage : window.sessionStorage;
+      this.#scope === "local" ? window.localStorage : window.sessionStorage;
   }
 
   public async delete(key: string): Promise<void> {
@@ -105,6 +109,10 @@ export class StorageCache implements Cache {
     this.updateSize(size + added);
 
     return true;
+  }
+
+  public get scope(): StorageCacheScope {
+    return this.#scope;
   }
 
   public async size(): Promise<number> {
