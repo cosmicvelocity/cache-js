@@ -17,5 +17,11 @@ describe("CacheFactory", () => {
 
       expect((cache as any).scope).toBe("session");
     });
+
+    test("not supported options.", () => {
+      expect(() => {
+        const cache = CacheFactory.create("hogehoge" as any);
+      }).toThrow("storage type is not supported.");
+    });
   });
 });
